@@ -92,7 +92,7 @@ export default function BlogPage() {
           </div>
 
           {/* Search and Filters */}
-          <div className="mb-8 space-y-4">
+          <div className="mb-6 md:mb-8 space-y-4">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
               <input
@@ -104,8 +104,37 @@ export default function BlogPage() {
               />
             </div>
 
-            {/* Tags Filter */}
-            <div className="flex flex-wrap gap-2">
+            {/* Mobile Tags Filter - Horizontal Scroll */}
+            <div className="md:hidden">
+              <div className="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                <button
+                  onClick={() => setSelectedTag('')}
+                  className={`px-3 py-1 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
+                    selectedTag === ''
+                      ? 'bg-primary text-primary-foreground'
+                      : 'bg-muted text-muted-foreground hover:text-foreground'
+                  }`}
+                >
+                  All
+                </button>
+                {getAllTags().map((tag) => (
+                  <button
+                    key={tag}
+                    onClick={() => setSelectedTag(tag)}
+                    className={`px-3 py-1 rounded-full text-sm font-medium transition-colors whitespace-nowrap ${
+                      selectedTag === tag
+                        ? 'bg-primary text-primary-foreground'
+                        : 'bg-muted text-muted-foreground hover:text-foreground'
+                    }`}
+                  >
+                    {tag}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop Tags Filter */}
+            <div className="hidden md:flex flex-wrap gap-2">
               <button
                 onClick={() => setSelectedTag('')}
                 className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
@@ -156,57 +185,97 @@ export default function BlogPage() {
             </div>
           ) : (
             // Posts Grid
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 md:gap-6 md:grid-cols-2 lg:grid-cols-3">
               {filteredPosts.map((post) => (
                 <div
                   key={post.id}
-                  className="border border-border rounded-lg p-6 hover:shadow-md transition-shadow"
+                  className="border border-border rounded-lg p-4 md:p-6 hover:shadow-md transition-shadow"
                 >
-                  <h3 className="text-lg font-semibold text-foreground mb-3 line-clamp-2">
+                  <h3 className="text-base md:text-lg font-semibold text-foreground mb-3 line-clamp-2 leading-tight">
                     {post.title}
                   </h3>
 
                   <div className="space-y-3">
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
-                        <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                    {/* Mobile Metadata */}
+                    <div className="md:hidden space-y-2">
+                      <div className="flex items-center justify-between text-xs text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <User className="h-3 w-3" />
+                          <span className="truncate max-w-[100px]">{post.authorName}</span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <User className="h-3 w-3" />
-                        <span>{post.authorName}</span>
-                      </div>
+                      
+                      {post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1">
+                          {post.tags.slice(0, 2).map((tag, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                          {post.tags.length > 2 && (
+                            <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
+                              +{post.tags.length - 2}
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </div>
 
-                    {post.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-1">
-                        {post.tags.slice(0, 3).map((tag, index) => (
-                          <span
-                            key={index}
-                            className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                        {post.tags.length > 3 && (
-                          <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
-                            +{post.tags.length - 3} more
-                          </span>
-                        )}
+                    {/* Desktop Metadata */}
+                    <div className="hidden md:block">
+                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          <span>{new Date(post.publishedAt).toLocaleDateString()}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <User className="h-3 w-3" />
+                          <span>{post.authorName}</span>
+                        </div>
                       </div>
-                    )}
 
-                    <div className="flex items-center gap-2 pt-2">
-                      <button
-                        onClick={() => {
-                          // In a real app, this would navigate to the full post view
-                          alert('View full post functionality would be implemented here');
-                        }}
+                      {post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-2">
+                          {post.tags.slice(0, 3).map((tag, index) => (
+                            <span
+                              key={index}
+                              className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                          {post.tags.length > 3 && (
+                            <span className="px-2 py-1 bg-muted text-muted-foreground text-xs rounded-full">
+                              +{post.tags.length - 3} more
+                            </span>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-2">
+                      <Link
+                        href={`/blog/${post.id}`}
                         className="flex items-center gap-1 text-sm text-primary hover:underline"
                       >
                         <Eye className="h-3 w-3" />
-                        Read More
-                      </button>
+                        <span className="hidden sm:inline">Read More</span>
+                      </Link>
+                      <div className="md:hidden">
+                        <Link
+                          href={`/blog/${post.id}`}
+                          className="px-3 py-1 bg-primary text-primary-foreground text-xs rounded-full"
+                        >
+                          Read
+                        </Link>
+                      </div>
                     </div>
                   </div>
                 </div>

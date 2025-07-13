@@ -213,6 +213,7 @@ body {
   background: hsl(var(--color-background));
   border-radius: 0.5rem 0.5rem 0 0;
   flex-wrap: wrap;
+  position: relative;
 }
 
 .toolbar-button {
@@ -244,4 +245,549 @@ body {
   width: 1px;
   background: hsl(var(--color-border));
   margin: 0 0.25rem;
+}
+
+/* Enhanced code block styles */
+.ProseMirror pre {
+  background: hsl(var(--color-muted));
+  padding: 1rem;
+  border-radius: var(--radius);
+  overflow-x: auto;
+  margin: 1rem 0;
+  border: 1px solid hsl(var(--color-border));
+  position: relative;
+}
+
+.ProseMirror pre code {
+  background: none;
+  padding: 0;
+  color: hsl(var(--color-foreground));
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+
+/* Fix for code block text visibility */
+.ProseMirror pre {
+  color: hsl(var(--color-foreground));
+}
+
+.ProseMirror pre * {
+  color: inherit;
+}
+
+/* Ensure code blocks are visible in editor */
+.ProseMirror .ProseMirror-codeBlock {
+  color: hsl(var(--color-foreground));
+  background: hsl(var(--color-muted));
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--color-border));
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+/* Code block placeholder */
+.ProseMirror .ProseMirror-codeBlock:empty::before {
+  content: 'Enter code here...';
+  color: hsl(var(--color-muted-foreground));
+  font-style: italic;
+}
+
+/* Syntax highlighting for code blocks */
+.ProseMirror pre .hljs {
+  background: transparent;
+  color: hsl(var(--color-foreground));
+}
+
+.ProseMirror pre .hljs-keyword {
+  color: #d73a49;
+}
+
+.ProseMirror pre .hljs-string {
+  color: #032f62;
+}
+
+.ProseMirror pre .hljs-comment {
+  color: #6a737d;
+  font-style: italic;
+}
+
+.ProseMirror pre .hljs-function {
+  color: #6f42c1;
+}
+
+.ProseMirror pre .hljs-number {
+  color: #005cc5;
+}
+
+.ProseMirror pre .hljs-variable {
+  color: #e36209;
+}
+
+/* Image upload modal styles */
+.image-upload-modal {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 0.5rem;
+  background: hsl(var(--color-background));
+  border: 1px solid hsl(var(--color-border));
+  border-radius: var(--radius);
+  padding: 1rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  min-width: 300px;
+}
+
+/* File upload button styles */
+.file-upload-button {
+  position: relative;
+  overflow: hidden;
+}
+
+.file-upload-button input[type="file"] {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  cursor: pointer;
+  width: 100%;
+  height: 100%;
+}
+
+/* Enhanced image styles */
+.ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  margin: 1rem 0;
+  border: 1px solid hsl(var(--color-border));
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Dark mode adjustments for code blocks */
+@media (prefers-color-scheme: dark) {
+  .ProseMirror pre .hljs-keyword {
+    color: #ff7b72;
+  }
+  
+  .ProseMirror pre .hljs-string {
+    color: #a5d6ff;
+  }
+  
+  .ProseMirror pre .hljs-comment {
+    color: #8b949e;
+  }
+  
+  .ProseMirror pre .hljs-function {
+    color: #d2a8ff;
+  }
+  
+  .ProseMirror pre .hljs-number {
+    color: #79c0ff;
+  }
+  
+  .ProseMirror pre .hljs-variable {
+    color: #ffa657;
+  }
+}
+
+/* Additional fixes for code block visibility */
+.ProseMirror pre,
+.ProseMirror code {
+  color: hsl(var(--color-foreground)) !important;
+}
+
+.ProseMirror pre *,
+.ProseMirror code * {
+  color: inherit !important;
+}
+
+/* Ensure code blocks are always visible */
+.ProseMirror [data-type="codeBlock"] {
+  color: hsl(var(--color-foreground));
+  background: hsl(var(--color-muted));
+  padding: 1rem;
+  border-radius: var(--radius);
+  border: 1px solid hsl(var(--color-border));
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  line-height: 1.5;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+/* Code block content visibility */
+.ProseMirror [data-type="codeBlock"] pre {
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  border: none;
+  color: hsl(var(--color-foreground));
+}
+
+.ProseMirror [data-type="codeBlock"] code {
+  background: transparent;
+  padding: 0;
+  color: hsl(var(--color-foreground));
+}
+
+/* Code block language display */
+.ProseMirror [data-type="codeBlock"] {
+  position: relative;
+  margin: 1.5rem 0;
+}
+
+.ProseMirror [data-type="codeBlock"]::before {
+  content: attr(data-language);
+  position: absolute;
+  top: -0.75rem;
+  left: 1rem;
+  background: hsl(var(--color-primary));
+  color: hsl(var(--color-primary-foreground));
+  padding: 0.25rem 0.75rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  z-index: 10;
+}
+
+.ProseMirror [data-type="codeBlock"][data-language=""]::before {
+  content: "Plain Text";
+  background: hsl(var(--color-muted-foreground));
+  color: hsl(var(--color-background));
+}
+
+/* Language-specific labels */
+.ProseMirror [data-type="codeBlock"][data-language="javascript"]::before {
+  content: "JavaScript";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="typescript"]::before {
+  content: "TypeScript";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="python"]::before {
+  content: "Python";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="java"]::before {
+  content: "Java";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="cpp"]::before {
+  content: "C++";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="csharp"]::before {
+  content: "C#";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="php"]::before {
+  content: "PHP";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="ruby"]::before {
+  content: "Ruby";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="go"]::before {
+  content: "Go";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="rust"]::before {
+  content: "Rust";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="sql"]::before {
+  content: "SQL";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="html"]::before {
+  content: "HTML";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="css"]::before {
+  content: "CSS";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="bash"]::before {
+  content: "Bash";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="powershell"]::before {
+  content: "PowerShell";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="json"]::before {
+  content: "JSON";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="xml"]::before {
+  content: "XML";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="yaml"]::before {
+  content: "YAML";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="markdown"]::before {
+  content: "Markdown";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="dockerfile"]::before {
+  content: "Dockerfile";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="shell"]::before {
+  content: "Shell";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="perl"]::before {
+  content: "Perl";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="scala"]::before {
+  content: "Scala";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="kotlin"]::before {
+  content: "Kotlin";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="swift"]::before {
+  content: "Swift";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="r"]::before {
+  content: "R";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="matlab"]::before {
+  content: "MATLAB";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="lua"]::before {
+  content: "Lua";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="haskell"]::before {
+  content: "Haskell";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="elixir"]::before {
+  content: "Elixir";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="clojure"]::before {
+  content: "Clojure";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="erlang"]::before {
+  content: "Erlang";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="fsharp"]::before {
+  content: "F#";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="dart"]::before {
+  content: "Dart";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="nim"]::before {
+  content: "Nim";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="crystal"]::before {
+  content: "Crystal";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="zig"]::before {
+  content: "Zig";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="v"]::before {
+  content: "V";
+}
+
+.ProseMirror [data-type="codeBlock"][data-language="odin"]::before {
+  content: "Odin";
+}
+
+/* Blog reading page styles */
+.blog-content {
+  line-height: 1.8;
+  color: hsl(var(--color-foreground));
+}
+
+.blog-content h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin: 2rem 0 1rem 0;
+  color: hsl(var(--color-foreground));
+}
+
+.blog-content h2 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 1.5rem 0 1rem 0;
+  color: hsl(var(--color-foreground));
+}
+
+.blog-content h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 1.25rem 0 0.75rem 0;
+  color: hsl(var(--color-foreground));
+}
+
+.blog-content p {
+  margin: 1rem 0;
+  color: hsl(var(--color-foreground));
+}
+
+.blog-content ul,
+.blog-content ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.blog-content li {
+  margin: 0.5rem 0;
+}
+
+.blog-content blockquote {
+  border-left: 4px solid hsl(var(--color-primary));
+  padding-left: 1rem;
+  margin: 1.5rem 0;
+  font-style: italic;
+  color: hsl(var(--color-muted-foreground));
+}
+
+.blog-content code {
+  background: hsl(var(--color-muted));
+  padding: 0.2rem 0.4rem;
+  border-radius: 0.25rem;
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+}
+
+.blog-content pre {
+  background: hsl(var(--color-muted));
+  padding: 1rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+  margin: 1.5rem 0;
+}
+
+.blog-content pre code {
+  background: transparent;
+  padding: 0;
+}
+
+.blog-content a {
+  color: hsl(var(--color-primary));
+  text-decoration: underline;
+  text-decoration-color: hsl(var(--color-muted-foreground));
+}
+
+.blog-content a:hover {
+  text-decoration-color: hsl(var(--color-foreground));
+}
+
+.blog-content img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1.5rem 0;
+}
+
+.blog-content hr {
+  border: none;
+  border-top: 1px solid hsl(var(--color-border));
+  margin: 2rem 0;
+}
+
+/* Mobile-specific styles */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
+/* Mobile touch improvements */
+@media (max-width: 768px) {
+  .blog-content {
+    font-size: 16px; /* Prevent zoom on iOS */
+    line-height: 1.7;
+  }
+  
+  .blog-content h1 {
+    font-size: 1.75rem;
+    margin: 1.5rem 0 1rem 0;
+  }
+  
+  .blog-content h2 {
+    font-size: 1.5rem;
+    margin: 1.25rem 0 0.75rem 0;
+  }
+  
+  .blog-content h3 {
+    font-size: 1.25rem;
+    margin: 1rem 0 0.5rem 0;
+  }
+  
+  .blog-content p {
+    margin: 0.75rem 0;
+  }
+  
+  .blog-content ul,
+  .blog-content ol {
+    margin: 0.75rem 0;
+    padding-left: 1.25rem;
+  }
+  
+  .blog-content li {
+    margin: 0.25rem 0;
+  }
+  
+  .blog-content blockquote {
+    margin: 1rem 0;
+    padding-left: 0.75rem;
+  }
+  
+  .blog-content pre {
+    margin: 1rem 0;
+    padding: 0.75rem;
+    font-size: 0.875rem;
+  }
+  
+  .blog-content img {
+    margin: 1rem 0;
+  }
+}
+
+/* Touch-friendly button sizes */
+@media (max-width: 768px) {
+  button, 
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  
+  input,
+  textarea {
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
 }

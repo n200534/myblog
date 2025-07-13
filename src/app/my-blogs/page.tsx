@@ -7,22 +7,18 @@ import { useRouter } from 'next/navigation';
 import { Edit, Trash2, Eye, Plus, Calendar, User } from 'lucide-react';
 import Link from 'next/link';
 import { getPostsByAuthor, deletePost, BlogPost } from '@/lib/posts';
+import { withAuth } from '@/components/auth/withAuth';
 
-export default function MyBlogsPage() {
+function MyBlogsPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!user) {
-      router.push('/signin');
-      return;
-    }
-
     const loadPosts = async () => {
       try {
-        const userPosts = await getPostsByAuthor(user.uid);
+        const userPosts = await getPostsByAuthor(user!.uid);
         setPosts(userPosts);
       } catch (error) {
         console.error('Failed to load posts:', error);
@@ -32,7 +28,7 @@ export default function MyBlogsPage() {
     };
 
     loadPosts();
-  }, [user, router]);
+  }, [user]);
 
   const handleDelete = async (postId: string) => {
     if (confirm('Are you sure you want to delete this post?')) {
@@ -50,10 +46,6 @@ export default function MyBlogsPage() {
     // In a real app, you'd want to populate the editor with the post data
     router.push('/post');
   };
-
-  if (!user) {
-    return null;
-  }
 
   if (isLoading) {
     return (
@@ -193,4 +185,6 @@ export default function MyBlogsPage() {
       </div>
     </div>
   );
-} 
+}
+
+export default withAuth(MyBlogsPage); 

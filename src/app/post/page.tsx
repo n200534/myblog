@@ -5,6 +5,7 @@ import { useAuth } from '@/components/auth/AuthContext';
 import Navigation from '@/components/ui/Navigation';
 import RichTextEditor from '@/components/RichTextEditor';
 import { useRouter } from 'next/navigation';
+import { withAuth } from '@/components/auth/withAuth';
 import { 
   Save, 
   Eye, 
@@ -564,7 +565,7 @@ Content-Type: application/json
   }
 };
 
-export default function PostPage() {
+function PostPage() {
   const { user } = useAuth();
   const router = useRouter();
   const [title, setTitle] = useState('');
@@ -645,10 +646,6 @@ export default function PostPage() {
     }
   };
 
-  if (!user) {
-    return null;
-  }
-
   return (
     <div className="min-h-screen bg-background">
       <Navigation />
@@ -656,8 +653,19 @@ export default function PostPage() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-4">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-6 md:mb-8 gap-4">
+            {/* Mobile Back Button */}
+            <div className="md:hidden">
+              <Link
+                href="/"
+                className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ArrowLeft className="h-5 w-5" />
+              </Link>
+            </div>
+            
+            {/* Desktop Back Button */}
+            <div className="hidden md:flex items-center gap-4">
               <Link
                 href="/"
                 className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
@@ -666,29 +674,31 @@ export default function PostPage() {
                 Back to Home
               </Link>
             </div>
+            
+            {/* Action Buttons */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setShowTemplates(!showTemplates)}
-                className="flex items-center gap-2 px-4 py-2 rounded-md border border-border bg-background text-foreground hover:bg-accent transition-colors"
+                className="flex items-center gap-2 px-3 md:px-4 py-2 rounded-md border border-border bg-background text-foreground hover:bg-accent transition-colors text-sm"
               >
                 <FileText size={16} />
-                Templates
+                <span className="hidden sm:inline">Templates</span>
               </button>
               <button
                 onClick={() => setIsPreview(!isPreview)}
-                className={`flex items-center gap-2 px-4 py-2 rounded-md border transition-colors ${
+                className={`flex items-center gap-2 px-3 md:px-4 py-2 rounded-md border transition-colors text-sm ${
                   isPreview 
                     ? 'bg-primary text-primary-foreground border-primary' 
                     : 'bg-background text-foreground border-border hover:bg-accent'
                 }`}
               >
                 <Eye size={16} />
-                {isPreview ? 'Edit' : 'Preview'}
+                <span className="hidden sm:inline">{isPreview ? 'Edit' : 'Preview'}</span>
               </button>
               <button
                 onClick={handleSave}
                 disabled={isSaving || !title.trim() || !content.trim()}
-                className={`flex items-center gap-2 px-6 py-2 rounded-md font-medium transition-colors ${
+                className={`flex items-center gap-2 px-4 md:px-6 py-2 rounded-md font-medium transition-colors text-sm ${
                   isSaving || !title.trim() || !content.trim()
                     ? 'bg-muted text-muted-foreground cursor-not-allowed'
                     : 'bg-primary text-primary-foreground hover:bg-primary/90'
@@ -697,12 +707,12 @@ export default function PostPage() {
                 {isSaving ? (
                   <>
                     <Loader2 className="h-4 w-4 animate-spin" />
-                    Saving...
+                    <span className="hidden sm:inline">Saving...</span>
                   </>
                 ) : (
                   <>
                     <Save size={16} />
-                    Publish Writeup
+                    <span className="hidden sm:inline">Publish</span>
                   </>
                 )}
               </button>
@@ -767,7 +777,7 @@ export default function PostPage() {
                 <div className="flex items-center gap-4 text-sm text-muted-foreground mb-6">
                   <div className="flex items-center gap-1">
                     <User className="h-4 w-4" />
-                    <span>{user.displayName || user.email?.split('@')[0] || 'Anonymous'}</span>
+                    <span>{user!.displayName || user!.email?.split('@')[0] || 'Anonymous'}</span>
                   </div>
                   <span>•</span>
                   <div className="flex items-center gap-1">
@@ -920,4 +930,6 @@ export default function PostPage() {
       </div>
     </div>
   );
-} 
+}
+
+export default withAuth(PostPage); 
