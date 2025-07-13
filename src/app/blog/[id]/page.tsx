@@ -5,7 +5,7 @@ import { useParams } from "next/navigation";
 import { getPost, BlogPost } from "@/lib/posts";
 import Navigation from "@/components/ui/Navigation";
 import Link from "next/link";
-import { Calendar, User, Tag, ArrowLeft, Clock, Eye, Share2, BookOpen, Bookmark, BookmarkPlus, ChevronUp, ChevronDown } from "lucide-react";
+import { Calendar, User, Tag, ArrowLeft, Clock, Share2, BookOpen, Bookmark, BookmarkPlus, ChevronUp, ChevronDown } from "lucide-react";
 import BlogContent from "@/components/BlogContent";
 
 export default function BlogPostPage() {

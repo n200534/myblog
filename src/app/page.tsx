@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/components/auth/AuthContext';
 import Navigation from '@/components/ui/Navigation';
-import { PenTool, Shield, Users, BookOpen, ArrowRight, Star } from 'lucide-react';
+import { PenTool, Shield, Users, BookOpen, ArrowRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Home() {

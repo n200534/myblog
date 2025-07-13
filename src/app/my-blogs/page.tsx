@@ -35,13 +35,14 @@ function MyBlogsPage() {
       try {
         await deletePost(postId);
         setPosts(posts.filter(post => post.id !== postId));
-      } catch (error: any) {
-        alert('Failed to delete post: ' + error.message);
+          } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert('Failed to delete post: ' + errorMessage);
       }
     }
   };
 
-  const handleEdit = (post: BlogPost) => {
+  const handleEdit = () => {
     // For now, we'll just navigate to the post page
     // In a real app, you'd want to populate the editor with the post data
     router.push('/post');
@@ -118,7 +119,7 @@ function MyBlogsPage() {
                     </h3>
                     <div className="flex items-center gap-2">
                       <button
-                        onClick={() => handleEdit(post)}
+                        onClick={() => handleEdit()}
                         className="p-2 text-muted-foreground hover:text-foreground transition-colors"
                         title="Edit"
                       >

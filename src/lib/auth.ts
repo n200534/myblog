@@ -42,8 +42,9 @@ export const signUp = async (email: string, password: string, displayName: strin
       uid: user.uid,
       ...userData,
     };
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(errorMessage);
   }
 };
 
@@ -63,16 +64,18 @@ export const signIn = async (email: string, password: string) => {
       photoURL: user.photoURL || userData?.photoURL,
       createdAt: userData?.createdAt || new Date(),
     };
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(errorMessage);
   }
 };
 
 export const signOut = async () => {
   try {
     await firebaseSignOut(auth);
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    throw new Error(errorMessage);
   }
 };
 

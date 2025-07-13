@@ -22,7 +22,7 @@ export default function SignInForm() {
 
     try {
       await signIn(email, password);
-    } catch (err) {
+    } catch {
       setError('Invalid email or password');
     }
   };
@@ -103,6 +103,7 @@ export default function SignInForm() {
 
       <div className="mt-6 text-center">
         <p className="text-sm text-muted-foreground">
+          {/* eslint-disable-next-line react/no-unescaped-entities */}
           Don't have an account?{' '}
           <a href="/signup" className="text-primary hover:underline font-medium">
             Sign up

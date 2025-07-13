@@ -29,24 +29,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const signIn = async (email: string, password: string) => {
     try {
       await firebaseSignIn(email, password);
-    } catch (error: any) {
-      throw new Error(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(errorMessage);
     }
   };
 
   const signUp = async (name: string, email: string, password: string) => {
     try {
       await firebaseSignUp(email, password, name);
-    } catch (error: any) {
-      throw new Error(error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      throw new Error(errorMessage);
     }
   };
 
   const signOut = async () => {
     try {
       await firebaseSignOut();
-    } catch (error: any) {
-      console.error('Sign out error:', error);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.error('Sign out error:', errorMessage);
     }
   };
 

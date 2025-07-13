@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Navigation from '@/components/ui/Navigation';
-import { Search, Calendar, User, Tag, Eye } from 'lucide-react';
+import { Search, Calendar, User, Eye } from 'lucide-react';
 import Link from 'next/link';
 import { getAllPosts, searchPosts, getPostsByTag, BlogPost } from '@/lib/posts';
 

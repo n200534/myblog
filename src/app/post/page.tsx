@@ -13,8 +13,6 @@ import {
   Loader2, 
   FileText, 
   Shield, 
-  Bug, 
-  Lock, 
   Zap,
   Calendar,
   Tag,
@@ -24,7 +22,7 @@ import {
   Check
 } from 'lucide-react';
 import Link from 'next/link';
-import { createPost, BlogPost } from '@/lib/posts';
+import { createPost } from '@/lib/posts';
 
 // Security writeup templates
 const SECURITY_TEMPLATES = {
@@ -571,7 +569,7 @@ function PostPage() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [tags, setTags] = useState('');
-  const [selectedTemplate, setSelectedTemplate] = useState('');
+
   const [isPreview, setIsPreview] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [showTemplates, setShowTemplates] = useState(false);
@@ -590,7 +588,6 @@ function PostPage() {
       setTitle(template.title);
       setContent(template.content);
       setTags(template.tags.join(', '));
-      setSelectedTemplate(templateKey);
       setShowTemplates(false);
     }
   };
@@ -634,13 +631,13 @@ function PostPage() {
       setTitle('');
       setContent('');
       setTags('');
-      setSelectedTemplate('');
       setIsPreview(false);
 
       alert('Security writeup saved successfully!');
       router.push('/my-blogs');
-    } catch (error: any) {
-      alert('Failed to save security writeup: ' + error.message);
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      alert('Failed to save security writeup: ' + errorMessage);
     } finally {
       setIsSaving(false);
     }

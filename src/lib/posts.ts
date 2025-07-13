@@ -7,9 +7,7 @@ import {
   getDocs,
   getDoc,
   query,
-  where,
   orderBy,
-  limit,
   Timestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
@@ -38,8 +36,11 @@ export const createPost = async (post: Omit<BlogPost, 'id' | 'publishedAt' | 'up
 
     const docRef = await addDoc(collection(db, 'posts'), postData);
     return { id: docRef.id, ...postData };
-  } catch (error: any) {
-    throw new Error('Failed to create post: ' + error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error('Failed to create post: ' + error.message);
+    }
+    throw new Error('Failed to create post: An unknown error occurred.');
   }
 };
 
@@ -50,16 +51,22 @@ export const updatePost = async (postId: string, updates: Partial<BlogPost>) => 
       ...updates,
       updatedAt: Timestamp.now(),
     });
-  } catch (error: any) {
-    throw new Error('Failed to update post: ' + error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error('Failed to update post: ' + error.message);
+    }
+    throw new Error('Failed to update post: An unknown error occurred.');
   }
 };
 
 export const deletePost = async (postId: string) => {
   try {
     await deleteDoc(doc(db, 'posts', postId));
-  } catch (error: any) {
-    throw new Error('Failed to delete post: ' + error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error('Failed to delete post: ' + error.message);
+    }
+    throw new Error('Failed to delete post: An unknown error occurred.');
   }
 };
 
@@ -76,8 +83,11 @@ export const getPost = async (postId: string): Promise<BlogPost | null> => {
       } as BlogPost;
     }
     return null;
-  } catch (error: any) {
-    throw new Error('Failed to get post: ' + error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error('Failed to get post: ' + error.message);
+    }
+    throw new Error('Failed to get post: An unknown error occurred.');
   }
 };
 
@@ -98,8 +108,11 @@ export const getAllPosts = async (): Promise<BlogPost[]> => {
         updatedAt: data.updatedAt.toDate(),
       } as BlogPost;
     });
-  } catch (error: any) {
-    throw new Error('Failed to get posts: ' + error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error('Failed to get posts: ' + error.message);
+    }
+    throw new Error('Failed to get posts: An unknown error occurred.');
   }
 };
 
@@ -123,8 +136,11 @@ export const getPostsByAuthor = async (authorId: string): Promise<BlogPost[]> =>
         } as BlogPost;
       })
       .filter(post => post.authorId === authorId);
-  } catch (error: any) {
-    throw new Error('Failed to get posts by author: ' + error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error('Failed to get posts by author: ' + error.message);
+    }
+    throw new Error('Failed to get posts by author: An unknown error occurred.');
   }
 };
 
@@ -153,8 +169,11 @@ export const searchPosts = async (searchTerm: string): Promise<BlogPost[]> => {
       post.authorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()))
     );
-  } catch (error: any) {
-    throw new Error('Failed to search posts: ' + error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error('Failed to search posts: ' + error.message);
+    }
+    throw new Error('Failed to search posts: An unknown error occurred.');
   }
 };
 
@@ -180,7 +199,10 @@ export const getPostsByTag = async (tag: string): Promise<BlogPost[]> => {
     return allPosts.filter(post =>
       post.tags.some(t => t.toLowerCase().includes(tag.toLowerCase()))
     );
-  } catch (error: any) {
-    throw new Error('Failed to get posts by tag: ' + error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new Error('Failed to get posts by tag: ' + error.message);
+    }
+    throw new Error('Failed to get posts by tag: An unknown error occurred.');
   }
 }; 

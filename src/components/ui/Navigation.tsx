@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '../auth/AuthContext';
-import { PenTool, User, LogOut, Settings, BookOpen, Plus, Menu, X } from 'lucide-react';
+import { PenTool, LogOut, BookOpen, Plus, Menu, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -72,7 +72,6 @@ export default function Navigation() {
                   <span className="text-sm font-medium text-foreground">
                     {user.displayName}
                   </span>
-                  <User className="h-4 w-4 text-muted-foreground" />
                 </button>
 
                 {isMenuOpen && (
