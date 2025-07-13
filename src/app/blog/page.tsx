@@ -16,7 +16,9 @@ export default function BlogPage() {
   useEffect(() => {
     const loadPosts = async () => {
       try {
+        console.log('Loading posts...');
         const allPosts = await getAllPosts();
+        console.log('Posts loaded:', allPosts);
         setPosts(allPosts);
         setFilteredPosts(allPosts);
       } catch (error) {

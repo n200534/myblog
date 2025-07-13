@@ -93,14 +93,18 @@ export const getPost = async (postId: string): Promise<BlogPost | null> => {
 
 export const getAllPosts = async (): Promise<BlogPost[]> => {
   try {
+    console.log('getAllPosts: Starting to fetch posts...');
     const postsQuery = query(
       collection(db, 'posts'),
       orderBy('publishedAt', 'desc')
     );
+    console.log('getAllPosts: Query created, fetching docs...');
     const querySnapshot = await getDocs(postsQuery);
+    console.log('getAllPosts: Query snapshot received, docs count:', querySnapshot.docs.length);
     
-    return querySnapshot.docs.map(doc => {
+    const posts = querySnapshot.docs.map(doc => {
       const data = doc.data();
+      console.log('getAllPosts: Processing doc:', doc.id, data);
       return {
         id: doc.id,
         ...data,
@@ -108,7 +112,11 @@ export const getAllPosts = async (): Promise<BlogPost[]> => {
         updatedAt: data.updatedAt.toDate(),
       } as BlogPost;
     });
+    
+    console.log('getAllPosts: Final posts array:', posts);
+    return posts;
   } catch (error: unknown) {
+    console.error('getAllPosts: Error occurred:', error);
     if (error instanceof Error) {
       throw new Error('Failed to get posts: ' + error.message);
     }
