@@ -4,15 +4,7 @@ import { useState, useEffect } from 'react';
 import Navigation from '@/components/ui/Navigation';
 import { Search, Calendar, User, Tag, Eye } from 'lucide-react';
 import Link from 'next/link';
-
-interface BlogPost {
-  id: string;
-  title: string;
-  content: string;
-  author: string;
-  publishedAt: Date;
-  tags: string[];
-}
+import { getAllPosts, searchPosts, getPostsByTag, BlogPost } from '@/lib/posts';
 
 export default function BlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -22,75 +14,43 @@ export default function BlogPage() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Load posts from localStorage
-    let savedPosts = localStorage.getItem('blogPosts');
-    
-    // If no posts exist, create sample data
-    if (!savedPosts) {
-      const samplePosts: BlogPost[] = [
-        {
-          id: '1',
-          title: 'Introduction to Cybersecurity: A Beginner\'s Guide',
-          content: '<h1>Introduction to Cybersecurity</h1><p>Cybersecurity is the practice of protecting systems, networks, and programs from digital attacks...</p>',
-          author: 'Sarah Johnson',
-          publishedAt: new Date('2024-01-15'),
-          tags: ['cybersecurity', 'beginner', 'security']
-        },
-        {
-          id: '2',
-          title: 'Advanced Penetration Testing Techniques',
-          content: '<h1>Advanced Penetration Testing</h1><p>Penetration testing is a simulated cyber attack against a computer system...</p>',
-          author: 'Mike Chen',
-          publishedAt: new Date('2024-01-10'),
-          tags: ['penetration-testing', 'advanced', 'security']
-        },
-        {
-          id: '3',
-          title: 'Understanding Zero-Day Vulnerabilities',
-          content: '<h1>Zero-Day Vulnerabilities</h1><p>A zero-day vulnerability is a security flaw that is unknown to the software vendor...</p>',
-          author: 'Alex Rodriguez',
-          publishedAt: new Date('2024-01-05'),
-          tags: ['vulnerabilities', 'zero-day', 'security']
-        },
-        {
-          id: '4',
-          title: 'Secure Coding Practices for Web Applications',
-          content: '<h1>Secure Coding Practices</h1><p>Writing secure code is essential in today\'s digital landscape...</p>',
-          author: 'Emily Davis',
-          publishedAt: new Date('2024-01-01'),
-          tags: ['secure-coding', 'web-security', 'development']
-        }
-      ];
-      localStorage.setItem('blogPosts', JSON.stringify(samplePosts));
-      savedPosts = JSON.stringify(samplePosts);
-    }
-    
-    const allPosts = JSON.parse(savedPosts);
-    setPosts(allPosts);
-    setFilteredPosts(allPosts);
-    setIsLoading(false);
+    const loadPosts = async () => {
+      try {
+        const allPosts = await getAllPosts();
+        setPosts(allPosts);
+        setFilteredPosts(allPosts);
+      } catch (error) {
+        console.error('Failed to load posts:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPosts();
   }, []);
 
   useEffect(() => {
-    let filtered = posts;
+    const filterPosts = async () => {
+      try {
+        let filtered = posts;
 
-    // Filter by search term
-    if (searchTerm) {
-      filtered = filtered.filter(post =>
-        post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        post.author.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
+        // Filter by search term
+        if (searchTerm) {
+          filtered = await searchPosts(searchTerm);
+        }
 
-    // Filter by tag
-    if (selectedTag) {
-      filtered = filtered.filter(post =>
-        post.tags.some(tag => tag.toLowerCase().includes(selectedTag.toLowerCase()))
-      );
-    }
+        // Filter by tag
+        if (selectedTag) {
+          filtered = await getPostsByTag(selectedTag);
+        }
 
-    setFilteredPosts(filtered);
+        setFilteredPosts(filtered);
+      } catch (error) {
+        console.error('Failed to filter posts:', error);
+      }
+    };
+
+    filterPosts();
   }, [posts, searchTerm, selectedTag]);
 
   const getAllTags = () => {
@@ -214,7 +174,7 @@ export default function BlogPage() {
                       </div>
                       <div className="flex items-center gap-1">
                         <User className="h-3 w-3" />
-                        <span>{post.author}</span>
+                        <span>{post.authorName}</span>
                       </div>
                     </div>
 

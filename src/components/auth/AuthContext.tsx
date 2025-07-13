@@ -1,13 +1,7 @@
 'use client';
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  avatar?: string;
-}
+import { User, signIn as firebaseSignIn, signUp as firebaseSignUp, signOut as firebaseSignOut, onAuthStateChange } from '@/lib/auth';
 
 interface AuthContextType {
   user: User | null;
@@ -24,61 +18,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    // Check for existing user session
-    const savedUser = localStorage.getItem('user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-    setIsLoading(false);
+    const unsubscribe = onAuthStateChange((user) => {
+      setUser(user);
+      setIsLoading(false);
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const signIn = async (email: string, password: string) => {
-    setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const mockUser: User = {
-        id: '1',
-        name: email.split('@')[0],
-        email,
-        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-    } catch (error) {
-      throw new Error('Sign in failed');
-    } finally {
-      setIsLoading(false);
+      await firebaseSignIn(email, password);
+    } catch (error: any) {
+      throw new Error(error.message);
     }
   };
 
   const signUp = async (name: string, email: string, password: string) => {
-    setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const mockUser: User = {
-        id: Date.now().toString(),
-        name,
-        email,
-        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`
-      };
-      
-      setUser(mockUser);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-    } catch (error) {
-      throw new Error('Sign up failed');
-    } finally {
-      setIsLoading(false);
+      await firebaseSignUp(email, password, name);
+    } catch (error: any) {
+      throw new Error(error.message);
     }
   };
 
-  const signOut = () => {
-    setUser(null);
-    localStorage.removeItem('user');
+  const signOut = async () => {
+    try {
+      await firebaseSignOut();
+    } catch (error: any) {
+      console.error('Sign out error:', error);
+    }
   };
 
   return (

@@ -6,15 +6,7 @@ import Navigation from '@/components/ui/Navigation';
 import { useRouter } from 'next/navigation';
 import { Edit, Trash2, Eye, Plus, Calendar, User } from 'lucide-react';
 import Link from 'next/link';
-
-interface BlogPost {
-  id: string;
-  title: string;
-  content: string;
-  author: string;
-  publishedAt: Date;
-  tags: string[];
-}
+import { getPostsByAuthor, deletePost, BlogPost } from '@/lib/posts';
 
 export default function MyBlogsPage() {
   const { user } = useAuth();
@@ -28,26 +20,28 @@ export default function MyBlogsPage() {
       return;
     }
 
-    // Load posts from localStorage
-    const savedPosts = localStorage.getItem('blogPosts');
-    if (savedPosts) {
-      const allPosts = JSON.parse(savedPosts);
-      // Filter posts by current user
-      const userPosts = allPosts.filter((post: BlogPost) => post.author === user.name);
-      setPosts(userPosts);
-    }
-    setIsLoading(false);
+    const loadPosts = async () => {
+      try {
+        const userPosts = await getPostsByAuthor(user.uid);
+        setPosts(userPosts);
+      } catch (error) {
+        console.error('Failed to load posts:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadPosts();
   }, [user, router]);
 
-  const handleDelete = (postId: string) => {
+  const handleDelete = async (postId: string) => {
     if (confirm('Are you sure you want to delete this post?')) {
-      const updatedPosts = posts.filter(post => post.id !== postId);
-      setPosts(updatedPosts);
-      
-      // Update localStorage
-      const allPosts = JSON.parse(localStorage.getItem('blogPosts') || '[]');
-      const updatedAllPosts = allPosts.filter((post: BlogPost) => post.id !== postId);
-      localStorage.setItem('blogPosts', JSON.stringify(updatedAllPosts));
+      try {
+        await deletePost(postId);
+        setPosts(posts.filter(post => post.id !== postId));
+      } catch (error: any) {
+        alert('Failed to delete post: ' + error.message);
+      }
     }
   };
 
@@ -139,7 +133,7 @@ export default function MyBlogsPage() {
                         <Edit className="h-4 w-4" />
                       </button>
                       <button
-                        onClick={() => handleDelete(post.id)}
+                        onClick={() => handleDelete(post.id!)}
                         className="p-2 text-muted-foreground hover:text-destructive transition-colors"
                         title="Delete"
                       >
@@ -156,7 +150,7 @@ export default function MyBlogsPage() {
                       </div>
                       <div className="flex items-center gap-1">
                         <User className="h-3 w-3" />
-                        <span>{post.author}</span>
+                        <span>{post.authorName}</span>
                       </div>
                     </div>
 

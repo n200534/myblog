@@ -54,22 +54,22 @@ export default function Navigation() {
                   className="flex items-center gap-2 p-2 rounded-md hover:bg-accent transition-colors"
                 >
                   <img
-                    src={user.avatar}
-                    alt={user.name}
+                    src={user.photoURL || `https://api.dicebear.com/7.x/avataaars/svg?seed=${user.email}`}
+                    alt={user.displayName}
                     className="w-8 h-8 rounded-full"
                   />
                   <span className="hidden sm:block text-sm font-medium text-foreground">
-                    {user.name}
+                    {user.displayName}
                   </span>
                   <User className="h-4 w-4 text-muted-foreground" />
                 </button>
 
                 {isMenuOpen && (
                   <div className="absolute right-0 mt-2 w-48 bg-background border border-border rounded-md shadow-lg py-2 z-50">
-                    <div className="px-4 py-2 border-b border-border">
-                      <p className="text-sm font-medium text-foreground">{user.name}</p>
-                      <p className="text-xs text-muted-foreground">{user.email}</p>
-                    </div>
+                                         <div className="px-4 py-2 border-b border-border">
+                       <p className="text-sm font-medium text-foreground">{user.displayName}</p>
+                       <p className="text-xs text-muted-foreground">{user.email}</p>
+                     </div>
                     <Link
                       href="/my-blogs"
                       className="flex items-center gap-2 px-4 py-2 text-sm text-foreground hover:bg-accent transition-colors"
